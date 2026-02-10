@@ -28,26 +28,52 @@ export default function Home() {
 
   // Step B: The Function (Action)
 
-  const handleSendMessage = () => {
-    if (!inputValue) return;
-    const UserMsg = { text: inputValue, sender: "User 🍠" };
+  const handleSendMessage = async () => {
+    if (!inputValue.trim()) return;
+
+    const UserMsg: Message = { text: inputValue, sender: "User 🍠" };
+
+    const msgToAPI = inputValue;
+
     setMessages((prev) => [...prev, UserMsg]);
     setInputValue(""); // "After type the input, we need to clean the input box!"
-    setTimeout(() => {
-      // Delay (500ms) before is typing...shows up
-      setIsTyping(true);
+    setIsTyping(true);
+    try {
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: msgToAPI }),
+      });
 
-      // Delay (2000ms) before SysMsg...shows up
-      setTimeout(() => {
-        const SysMsg = {
-          text: "I love you...🩷",
-          sender: "Y2k Banana 🍌🍌🍌",
-        };
+      const data = await response.json();
 
-        setMessages((prev) => [...prev, SysMsg]);
-        setIsTyping(false); // Dots disappear, message appears
-      }, 2000);
-    }, 500);
+      const SysMsg = {
+        text: data.reply,
+        sender: "Y2k Banana 🍌🍌🍌",
+      };
+
+      setMessages((prev) => [...prev, SysMsg]);
+    } catch (error) {
+      console.error("Failed to fetch:", error);
+    } finally {
+      setIsTyping(false);
+    }
+
+    // setTimeout(() => {
+    //   // Delay (500ms) before is typing...shows up
+    //   setIsTyping(true);
+
+    //   // Delay (2000ms) before SysMsg...shows up
+    //   setTimeout(() => {
+    //     const SysMsg = {
+    //       text: "I love you...🩷",
+    //       sender: "Y2k Banana 🍌🍌🍌",
+    //     };
+
+    //     setMessages((prev) => [...prev, SysMsg]);
+    //     setIsTyping(false); // Dots disappear, message appears
+    //   }, 2000);
+    // }, 500);
   };
 
   // Add Scroll effect
@@ -73,7 +99,7 @@ export default function Home() {
           className="absolute inset-0 opacity-20 pointer-events-none"
           style={{
             backgroundImage:
-              "linear-gradient(#7cb5f2 1px, transparent 2px), linear-gradient(90deg, #7cb5f2 1px, transparent 2px)",
+              "linear-gradient(white 1px, transparent 2px), linear-gradient(90deg, #7cb5f2 1px, transparent 2px)",
             backgroundSize: "40px 40px",
           }}
         />

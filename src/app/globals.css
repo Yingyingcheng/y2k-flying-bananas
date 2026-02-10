@@ -38,3 +38,9 @@ body {
 .animate-dot {
   animation: blink 1s infinite;
 }
+
+.window-body a {
+  color: #0000ee;
+  text-decoration: underline;
+  cursor: pointer;
+}
