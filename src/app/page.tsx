@@ -20,7 +20,7 @@ export default function Home() {
   const [isTyping, setIsTyping] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
-      text: "Hi~~~ This is Y2k Banana ✨ 🍌 ~~~ How are you...???",
+      text: "Hi~~~ This is Y2k Banana ✨ 🍌 ~~~ What's your name...???",
       sender: "Y2k Banana 🍌 🍌 🍌",
     },
   ]);
@@ -33,16 +33,16 @@ export default function Home() {
 
     const UserMsg: Message = { text: inputValue, sender: "User 🍠" };
 
-    const msgToAPI = inputValue;
+    const updatedHistory = [...messages, UserMsg];
 
-    setMessages((prev) => [...prev, UserMsg]);
+    setMessages(updatedHistory);
     setInputValue(""); // "After type the input, we need to clean the input box!"
     setIsTyping(true);
     try {
       const response = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: msgToAPI }),
+        body: JSON.stringify({ chatHistory: updatedHistory }),
       });
 
       const data = await response.json();
@@ -52,7 +52,9 @@ export default function Home() {
         sender: "Y2k Banana 🍌🍌🍌",
       };
 
-      setMessages((prev) => [...prev, SysMsg]);
+      if (data.reply) {
+        setMessages((prev) => [...prev, SysMsg]);
+      }
     } catch (error) {
       console.error("Failed to fetch:", error);
     } finally {
