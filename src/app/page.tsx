@@ -1,65 +1,167 @@
-import Image from "next/image";
+"use client";
+import "98.css";
+import dynamic from "next/dynamic";
+import { useState, useRef, useEffect } from "react";
+import LoadingScreen from "../components/LoadingScreen";
+
+const BananaScene = dynamic(() => import("../components/BananaScene"), {
+  ssr: false,
+});
+
+interface Message {
+  text: string;
+  sender: string;
+}
 
 export default function Home() {
+  // State-First Development. (A -> B -> C)
+  // Step A: The State (Storage)
+  const [isLoading, setIsLoading] = useState(true);
+  const [isTyping, setIsTyping] = useState(false);
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      text: "Hi~~~ This is Y2k Banana ✨ 🍌 ~~~ How are you...???",
+      sender: "Y2k Banana 🍌 🍌 🍌",
+    },
+  ]);
+  const [inputValue, setInputValue] = useState("");
+
+  // Step B: The Function (Action)
+
+  const handleSendMessage = () => {
+    if (!inputValue) return;
+    const UserMsg = { text: inputValue, sender: "User 🍠" };
+    setMessages((prev) => [...prev, UserMsg]);
+    setInputValue(""); // "After type the input, we need to clean the input box!"
+    setTimeout(() => {
+      // Delay (500ms) before is typing...shows up
+      setIsTyping(true);
+
+      // Delay (2000ms) before SysMsg...shows up
+      setTimeout(() => {
+        const SysMsg = {
+          text: "I love you...🩷",
+          sender: "Y2k Banana 🍌🍌🍌",
+        };
+
+        setMessages((prev) => [...prev, SysMsg]);
+        setIsTyping(false); // Dots disappear, message appears
+      }, 2000);
+    }, 500);
+  };
+
+  // Add Scroll effect
+  const scrollRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+  }, [messages, isTyping]); // Runs every time a new message is added or isTyping == True
+
+  // useEffect(SetupFunction, DependencyArray)
+  const [time, setTime] = useState("");
+  useEffect(() => {
+    const timer = setInterval(() => setTime(new Date().toLocaleString()), 1000);
+    return () => clearInterval(timer);
+  }, []);
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
+    <>
+      {isLoading && <LoadingScreen onFinished={() => setIsLoading(false)} />}
+      <main className="min-h-screen w-full bg-[#ff90f2] relative overflow-hidden p-4 md:p-12">
+        <div
+          className="absolute inset-0 opacity-20 pointer-events-none"
+          style={{
+            backgroundImage:
+              "linear-gradient(#7cb5f2 1px, transparent 2px), linear-gradient(90deg, #7cb5f2 1px, transparent 2px)",
+            backgroundSize: "40px 40px",
+          }}
         />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+
+        <div className="window w-full max-w-2xl mx-auto z-10 relative">
+          <div className="title-bar">
+            <div className="title-bar-text">BananaMessenger.exe</div>
+          </div>
+          <div className="status-bar">
+            <p className="status-bar-field">Status: Online</p>
+            <p className="status-bar-field">System Time: {time}</p>
+            <p className="status-bar-field">CPU: 99%</p>
+          </div>
+          <div className="window-body">
+            {/* 3D Viewport */}
+            <div className="h-64 bg-black border-2 border-inset mb-4">
+              <BananaScene />
+            </div>
+            {/* Chat History */}
+            <div
+              ref={scrollRef}
+              className="h-64 overflow-y-auto p-4 bg-amber-200 mb-4 border-inset flex flex-col gap-3"
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+              {messages.map((msg, i) => {
+                const isUser = msg.sender === "User 🍠";
+
+                return (
+                  <div
+                    key={i}
+                    className={`flex ${isUser ? "justify-end" : "justify-start"}`}
+                  >
+                    <div
+                      className={`max-w-[80%] p-2 border-2 ${
+                        isUser
+                          ? "bg-[#000080] text-white border-blue-400"
+                          : "bg-[#c0c0c0] text-black border-gray-100 shadow-[2px_2px_0px_rgba(0,0,0,1)]"
+                      }`}
+                      style={{
+                        boxShadow: isUser
+                          ? "none"
+                          : "inset -1px -1px #808080, inset 1px 1px #ffffff",
+                      }}
+                    >
+                      <div className="text-[10px] font-bold uppercase mb-1 opacity-70">
+                        {msg.sender}
+                      </div>
+                      <div className="text-sm leading-tight">{msg.text}</div>
+                    </div>
+                  </div>
+                );
+              })}
+              {/* System is Typing Animation */}
+              {isTyping && (
+                <div className="flex justify-start">
+                  <div className="bg-[#c0c0c0] p-2 border-2 border-gray-100 shadow-[2px_2px_0px_rgba(0,0,0,1)] text-xs font-mono">
+                    <span className="opacity-70 uppercase font-bold">
+                      Y2k Banana 🍌
+                    </span>
+                    <div className="flex gap-1 mt-1">
+                      is typing<span className="animate-pulse">.</span>
+                      <span className="animate-pulse [animation-delay:200ms]">
+                        .
+                      </span>
+                      <span className="animate-pulse [animation-delay:400ms]">
+                        .
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+            {/* Input Area */}
+            {/* Step C: The UI (Body)*/}
+            <div className="field-row ">
+              <input
+                type="text"
+                className="w-full min-h-10"
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
+              />
+              <button className="h-10" onClick={handleSendMessage}>
+                Send
+              </button>
+            </div>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+      </main>{" "}
+    </>
   );
 }
