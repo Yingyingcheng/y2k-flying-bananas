@@ -26,15 +26,20 @@ export default function Home() {
     },
   ]);
   const [inputValue, setInputValue] = useState("");
+
   const [bgColor, setBgColor] = useState("#fef3c7");
   const [language, setLanguage] = useState("English");
-  const colorOptions = [
-    { name: "Banana", hex: "#fef3c7" },
-    { name: "Rosie", hex: "#FFB7C5" },
-    { name: "Jennie", hex: "#6D0016" },
-    { name: "Jisoo", hex: "#C8A2C8" },
-    { name: "Lisa", hex: "#FFFF00" },
+  const colorThemes = [
+    { name: "Banana", bg: "#ff90f2", chat: "#fef3c7" },
+    { name: "Rosie", bg: "#FFB7C5", chat: "#FFF0F5" },
+    { name: "Jennie", bg: "#6D0016", chat: "#9D1A2F" },
+    { name: "Jisoo", bg: "#C8A2C8", chat: "#E6E6FA" },
+    { name: "Lisa", bg: "#FFFACD", chat: "#FFFF00" },
   ];
+
+  // Initialize with the first theme object
+  const [currentTheme, setCurrentTheme] = useState(colorThemes[0]);
+
   const languageOptions = [
     "English",
     "Traditional Chinese",
@@ -42,10 +47,9 @@ export default function Home() {
     "Spanish",
     "Korean",
   ];
-
   const playlist = [
-    { name: "Attention", file: "/music/NewJeans_Attention.mp3" },
     { name: "Ditto", file: "/music/NewJeans_Ditto.mp3" },
+    { name: "Attention", file: "/music/NewJeans_Attention.mp3" },
     { name: "Hype Boy", file: "/music/NewJeans_Hype_Boy.mp3" },
     { name: "OMG", file: "/music/NewJeans_OMG.mp3" },
     { name: "Super Shy", file: "/music/NewJeans_SuperShy.mp3" },
@@ -56,14 +60,14 @@ export default function Home() {
   useEffect(() => {
     const audio = document.getElementById("main-audio") as HTMLAudioElement;
     if (audio) {
-      audio.load(); // Reloads the player with the new song path
-      audio.play().catch((error) => {
+      audio.load();
+      audio.play().catch(() => {
         console.log(
           "Autoplay blocked. Music will start after your first click! ✨",
         );
-      }); // Automatically starts the new song
+      });
     }
-  }, [currentSong]); // This "Dependency Array" means: "Run this code every time currentSong changes."
+  }, [currentSong]);
 
   // Step B: The Function (Action)
 
@@ -138,7 +142,10 @@ export default function Home() {
   return (
     <>
       {isLoading && <LoadingScreen onFinished={() => setIsLoading(false)} />}
-      <main className="min-h-screen w-full bg-[#ff90f2] relative overflow-hidden p-4 md:p-12">
+      <main
+        className="min-h-screen w-full bg-[#ff90f2] relative overflow-hidden p-4 md:p-12"
+        style={{ backgroundColor: currentTheme.bg }}
+      >
         <div
           className="absolute inset-0 opacity-20 pointer-events-none"
           style={{
@@ -164,12 +171,17 @@ export default function Home() {
             >
               <label>Color: </label>
               <select
-                value={bgColor}
-                onChange={(e) => setBgColor(e.target.value)}
+                value={currentTheme.name}
+                onChange={(e) => {
+                  const selected = colorThemes.find(
+                    (t) => t.name === e.target.value,
+                  );
+                  if (selected) setCurrentTheme(selected);
+                }}
               >
-                {colorOptions.map((opt) => (
-                  <option key={opt.hex} value={opt.hex}>
-                    {opt.name}
+                {colorThemes.map((theme) => (
+                  <option key={theme.name} value={theme.name}>
+                    {theme.name}
                   </option>
                 ))}
               </select>
@@ -265,7 +277,7 @@ export default function Home() {
             <div
               ref={scrollRef}
               className="h-64 overflow-y-auto p-4 bg-amber-200 mb-4 border-inset flex flex-col gap-3"
-              style={{ backgroundColor: bgColor }}
+              style={{ backgroundColor: currentTheme.chat }}
             >
               {messages.map((msg, i) => {
                 const isUser = msg.sender === "User 🍠";
