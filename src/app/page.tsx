@@ -3,6 +3,7 @@ import "98.css";
 import dynamic from "next/dynamic";
 import { useState, useRef, useEffect } from "react";
 import LoadingScreen from "../components/LoadingScreen";
+import { error } from "console";
 
 const BananaScene = dynamic(() => import("../components/BananaScene"), {
   ssr: false,
@@ -25,6 +26,44 @@ export default function Home() {
     },
   ]);
   const [inputValue, setInputValue] = useState("");
+  const [bgColor, setBgColor] = useState("#fef3c7");
+  const [language, setLanguage] = useState("English");
+  const colorOptions = [
+    { name: "Banana", hex: "#fef3c7" },
+    { name: "Rosie", hex: "#FFB7C5" },
+    { name: "Jennie", hex: "#6D0016" },
+    { name: "Jisoo", hex: "#C8A2C8" },
+    { name: "Lisa", hex: "#FFFF00" },
+  ];
+  const languageOptions = [
+    "English",
+    "Traditional Chinese",
+    "Japanese",
+    "Spanish",
+    "Korean",
+  ];
+
+  const playlist = [
+    { name: "Attention", file: "/music/NewJeans_Attention.mp3" },
+    { name: "Ditto", file: "/music/NewJeans_Ditto.mp3" },
+    { name: "Hype Boy", file: "/music/NewJeans_Hype_Boy.mp3" },
+    { name: "OMG", file: "/music/NewJeans_OMG.mp3" },
+    { name: "Super Shy", file: "/music/NewJeans_SuperShy.mp3" },
+    { name: "Zero", file: "/music/NewJeans_Zero.mp3" },
+  ];
+  const [currentSong, setCurrentSong] = useState(playlist[0].file);
+
+  useEffect(() => {
+    const audio = document.getElementById("main-audio") as HTMLAudioElement;
+    if (audio) {
+      audio.load(); // Reloads the player with the new song path
+      audio.play().catch((error) => {
+        console.log(
+          "Autoplay blocked. Music will start after your first click! ✨",
+        );
+      }); // Automatically starts the new song
+    }
+  }, [currentSong]); // This "Dependency Array" means: "Run this code every time currentSong changes."
 
   // Step B: The Function (Action)
 
@@ -42,7 +81,10 @@ export default function Home() {
       const response = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ chatHistory: updatedHistory }),
+        body: JSON.stringify({
+          chatHistory: updatedHistory,
+          userLanguage: language,
+        }),
       });
 
       const data = await response.json();
@@ -116,6 +158,105 @@ export default function Home() {
             <p className="status-bar-field">CPU: 99%</p>
           </div>
           <div className="window-body">
+            <div
+              className="field-row mb-4"
+              style={{ justifyContent: "center", gap: "10px" }}
+            >
+              <label>Color: </label>
+              <select
+                value={bgColor}
+                onChange={(e) => setBgColor(e.target.value)}
+              >
+                {colorOptions.map((opt) => (
+                  <option key={opt.hex} value={opt.hex}>
+                    {opt.name}
+                  </option>
+                ))}
+              </select>
+
+              <label>Language: </label>
+              <select
+                value={language}
+                onChange={(e) => setLanguage(e.target.value)}
+              >
+                {languageOptions.map((lang) => (
+                  <option key={lang} value={lang}>
+                    {lang}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* PlayMusic */}
+            <div
+              className="field-row-stacked mt-4 p-2"
+              style={{ border: "2px inset #ffffff", background: "#c0c0c0" }}
+            >
+              <label htmlFor="music-select">
+                {" "}
+                Play NewJeans 👖 ▶︎ •၊၊||၊|။||||။‌‌‌‌‌၊|•
+              </label>
+
+              <select
+                id="music-select"
+                value={currentSong}
+                onChange={(e) => setCurrentSong(e.target.value)}
+                style={{ width: "100%" }}
+              >
+                {playlist.map((track, index) => (
+                  <option key={index} value={track.file}>
+                    {track.name}
+                  </option>
+                ))}
+              </select>
+
+              {/* Hidden audio element that updates when currentSong changes */}
+              <audio id="main-audio" src={currentSong} loop />
+
+              <div
+                style={{
+                  margin: "0 auto",
+                  justifyContent: "center",
+                  alignItems: "center", // 👈 This is the "magic" line for vertical alignment
+                  gap: "10px",
+                }}
+              >
+                <button
+                  style={{ gap: "4px" }}
+                  onClick={() =>
+                    (
+                      document.getElementById("main-audio") as HTMLAudioElement
+                    ).play()
+                  }
+                >
+                  ▶ Play
+                </button>
+                <button
+                  onClick={() =>
+                    (
+                      document.getElementById("main-audio") as HTMLAudioElement
+                    ).pause()
+                  }
+                >
+                  || Pause
+                </button>
+                <span style={{ fontSize: "10px", marginLeft: "10px" }}>
+                  Vol:
+                </span>
+                <input
+                  type="range"
+                  style={{ width: "60px" }}
+                  min="0"
+                  max="1"
+                  step="0.1"
+                  onChange={(e) =>
+                    ((
+                      document.getElementById("main-audio") as HTMLAudioElement
+                    ).volume = Number(e.target.value))
+                  }
+                />
+              </div>
+            </div>
             {/* 3D Viewport */}
             <div className="h-64 bg-black border-2 border-inset mb-4">
               <BananaScene />
@@ -124,6 +265,7 @@ export default function Home() {
             <div
               ref={scrollRef}
               className="h-64 overflow-y-auto p-4 bg-amber-200 mb-4 border-inset flex flex-col gap-3"
+              style={{ backgroundColor: bgColor }}
             >
               {messages.map((msg, i) => {
                 const isUser = msg.sender === "User 🍠";
