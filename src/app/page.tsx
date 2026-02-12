@@ -27,7 +27,6 @@ export default function Home() {
   ]);
   const [inputValue, setInputValue] = useState("");
 
-  const [bgColor, setBgColor] = useState("#fef3c7");
   const [language, setLanguage] = useState("English");
   const colorThemes = [
     { name: "Banana", bg: "#ff90f2", chat: "#fef3c7" },
