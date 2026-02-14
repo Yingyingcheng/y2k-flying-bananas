@@ -33,7 +33,7 @@ export default function Home() {
     { name: "Rosie", bg: "#FFB7C5", bgBanana: "#ff90f2", chat: "#FFF0F5" },
     { name: "Jennie", bg: "#6D0016", bgBanana: "#030202", chat: "#9D1A2F" },
     { name: "Jisoo", bg: "#9036e3", bgBanana: "#d2aef2", chat: "#E6E6FA" },
-    { name: "Lisa", bg: "#FFFACD", bgBanana: "#35d0ff", chat: "#FFFF00" },
+    { name: "Lisa", bg: "#ffdfbf", bgBanana: "#FFFACD", chat: "#FFFF00" },
   ];
 
   // Initialize with the first theme object

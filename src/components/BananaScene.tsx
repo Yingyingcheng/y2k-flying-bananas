@@ -74,7 +74,7 @@ export default function BananaScene({ currentTheme }: { currentTheme: any }) {
 
         {/* N64 Floor Grid */}
         <gridHelper
-          args={[20, 20, "#ffffff", currentTheme.chat]}
+          args={[20, 20, currentTheme.chat, currentTheme.chat]}
           position={[0, -0.5, 0]}
         />
       </Canvas>
