@@ -29,11 +29,11 @@ export default function Home() {
 
   const [language, setLanguage] = useState("English");
   const colorThemes = [
-    { name: "Banana", bg: "#ff90f2", chat: "#fef3c7" },
-    { name: "Rosie", bg: "#FFB7C5", chat: "#FFF0F5" },
-    { name: "Jennie", bg: "#6D0016", chat: "#9D1A2F" },
-    { name: "Jisoo", bg: "#C8A2C8", chat: "#E6E6FA" },
-    { name: "Lisa", bg: "#FFFACD", chat: "#FFFF00" },
+    { name: "Banana", bg: "#ff90f2", bgBanana: "#35d0ff", chat: "#fef3c7" },
+    { name: "Rosie", bg: "#FFB7C5", bgBanana: "#ff90f2", chat: "#FFF0F5" },
+    { name: "Jennie", bg: "#6D0016", bgBanana: "#030202", chat: "#9D1A2F" },
+    { name: "Jisoo", bg: "#9036e3", bgBanana: "#d2aef2", chat: "#E6E6FA" },
+    { name: "Lisa", bg: "#FFFACD", bgBanana: "#35d0ff", chat: "#FFFF00" },
   ];
 
   // Initialize with the first theme object
@@ -270,7 +270,7 @@ export default function Home() {
             </div>
             {/* 3D Viewport */}
             <div className="h-64 bg-black border-2 border-inset mb-4">
-              <BananaScene />
+              <BananaScene currentTheme={currentTheme} />
             </div>
             {/* Chat History */}
             <div

@@ -59,9 +59,12 @@ function RetroHero() {
   );
 }
 
-export default function BananaScene() {
+export default function BananaScene({ currentTheme }: { currentTheme: any }) {
   return (
-    <div className="h-full w-full bg-[#35d0ff]">
+    <div
+      className="h-full w-full"
+      style={{ backgroundColor: currentTheme.bgBanana }}
+    >
       <Canvas camera={{ position: [0, 1, 5] }}>
         <ambientLight intensity={0.6} />
         <pointLight position={[10, 10, 10]} intensity={1.5} />
