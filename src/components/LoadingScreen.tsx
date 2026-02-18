@@ -7,7 +7,7 @@ export default function LoadingScreen({
   onFinished: () => void;
 }) {
   const [percent, setPercent] = useState(0);
-  const [logs, setLogs] = useState<string[]>([]);
+  // const [logs, setLogs] = useState<string[]>([]);
 
   const bootMessages = [
     "Searching for BANANA_DRIVE...",
@@ -18,23 +18,27 @@ export default function LoadingScreen({
     "READY.",
   ];
 
+  const visibleLogs = bootMessages.filter((_, i) => {
+    // Every 16.7% of progress
+    const threshold = (i + 1) * (100 / bootMessages.length);
+    return percent >= threshold;
+  });
+
+  // useEffect(() => { ... }, [])
+  // setInterval(function, delay);
+  // setTimeout(function, delay); the function would be executed after 1s dealy
   useEffect(() => {
     const interval = setInterval(() => {
+      //1. This is the "Function" part (run setPercent logic)
       setPercent((prev) => {
         if (prev >= 100) {
           clearInterval(interval);
           setTimeout(onFinished, 1000);
           return 100;
         }
-        return prev + 1;
+        return prev + 1; // The increment: if current percent (referred to as prev) < 100
       });
-    }, 40);
-
-    bootMessages.forEach((msg, i) => {
-      setTimeout(() => {
-        setLogs((prev) => [...prev, `> ${msg}`]);
-      }, i * 600);
-    });
+    }, 40); // 2. This is the "Delay" part (40ms).
 
     return () => clearInterval(interval);
   }, [onFinished]);
@@ -49,7 +53,7 @@ export default function LoadingScreen({
 
         {/* Scrolling Logs */}
         <div className="h-32 mb-4 text-[#00FF00] text-xs overflow-hidden">
-          {logs.map((log, i) => (
+          {visibleLogs.map((log, i) => (
             <div key={i}>{log}</div>
           ))}
         </div>
