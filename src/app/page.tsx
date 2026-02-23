@@ -3,7 +3,7 @@ import "98.css";
 import dynamic from "next/dynamic";
 import { useState, useRef, useEffect } from "react";
 import LoadingScreen from "../components/LoadingScreen";
-import { error } from "console";
+import SnakeGame from "../components/SnakeGame";
 
 const BananaScene = dynamic(() => import("../components/BananaScene"), {
   ssr: false,
@@ -26,6 +26,7 @@ export default function Home() {
     },
   ]);
   const [inputValue, setInputValue] = useState("");
+  const [mode, setMode] = useState<"chat" | "snake">("chat");
 
   const [language, setLanguage] = useState("English");
   const colorThemes = [
@@ -198,6 +199,25 @@ export default function Home() {
               </select>
             </div>
 
+            <div
+              className="field-row mb-4"
+              style={{ justifyContent: "center", gap: "8px" }}
+            >
+              <label>Mode: </label>
+              <button
+                onClick={() => setMode("chat")}
+                aria-pressed={mode === "chat"}
+              >
+                Chat
+              </button>
+              <button
+                onClick={() => setMode("snake")}
+                aria-pressed={mode === "snake"}
+              >
+                Snake Game
+              </button>
+            </div>
+
             {/* PlayMusic */}
             <div
               className="field-row-stacked mt-4 p-2"
@@ -268,78 +288,84 @@ export default function Home() {
                 />
               </div>
             </div>
-            {/* 3D Viewport */}
-            <div className="h-64 bg-black border-2 border-inset mb-4">
-              <BananaScene currentTheme={currentTheme} />
-            </div>
-            {/* Chat History */}
-            <div
-              ref={scrollRef}
-              className="h-64 overflow-y-auto p-4 bg-amber-200 mb-4 border-inset flex flex-col gap-3"
-              style={{ backgroundColor: currentTheme.chat }}
-            >
-              {messages.map((msg, i) => {
-                const isUser = msg.sender === "User 🍠";
-
-                return (
-                  <div
-                    key={i}
-                    className={`flex ${isUser ? "justify-end" : "justify-start"}`}
-                  >
-                    <div
-                      className={`max-w-[80%] p-2 border-2 ${
-                        isUser
-                          ? "bg-[#000080] text-white border-blue-400"
-                          : "bg-[#c0c0c0] text-black border-gray-100 shadow-[2px_2px_0px_rgba(0,0,0,1)]"
-                      }`}
-                      style={{
-                        boxShadow: isUser
-                          ? "none"
-                          : "inset -1px -1px #808080, inset 1px 1px #ffffff",
-                      }}
-                    >
-                      <div className="text-[10px] font-bold uppercase mb-1 opacity-70">
-                        {msg.sender}
-                      </div>
-                      <div className="text-sm leading-tight">{msg.text}</div>
-                    </div>
-                  </div>
-                );
-              })}
-              {/* System is Typing Animation */}
-              {isTyping && (
-                <div className="flex justify-start">
-                  <div className="bg-[#c0c0c0] p-2 border-2 border-gray-100 shadow-[2px_2px_0px_rgba(0,0,0,1)] text-xs font-mono">
-                    <span className="opacity-70 uppercase font-bold">
-                      Y2k Banana 🍌
-                    </span>
-                    <div className="flex gap-1 mt-1">
-                      is typing<span className="animate-pulse">.</span>
-                      <span className="animate-pulse [animation-delay:200ms]">
-                        .
-                      </span>
-                      <span className="animate-pulse [animation-delay:400ms]">
-                        .
-                      </span>
-                    </div>
-                  </div>
+            {mode === "chat" ? (
+              <>
+                {/* 3D Viewport */}
+                <div className="h-64 bg-black border-2 border-inset mb-4">
+                  <BananaScene currentTheme={currentTheme} />
                 </div>
-              )}
-            </div>
-            {/* Input Area */}
-            {/* Step C: The UI (Body)*/}
-            <div className="field-row ">
-              <input
-                type="text"
-                className="w-full min-h-10"
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
-              />
-              <button className="h-10" onClick={handleSendMessage}>
-                Send
-              </button>
-            </div>
+                {/* Chat History */}
+                <div
+                  ref={scrollRef}
+                  className="h-64 overflow-y-auto p-4 bg-amber-200 mb-4 border-inset flex flex-col gap-3"
+                  style={{ backgroundColor: currentTheme.chat }}
+                >
+                  {messages.map((msg, i) => {
+                    const isUser = msg.sender === "User 🍠";
+
+                    return (
+                      <div
+                        key={i}
+                        className={`flex ${isUser ? "justify-end" : "justify-start"}`}
+                      >
+                        <div
+                          className={`max-w-[80%] p-2 border-2 ${
+                            isUser
+                              ? "bg-[#000080] text-white border-blue-400"
+                              : "bg-[#c0c0c0] text-black border-gray-100 shadow-[2px_2px_0px_rgba(0,0,0,1)]"
+                          }`}
+                          style={{
+                            boxShadow: isUser
+                              ? "none"
+                              : "inset -1px -1px #808080, inset 1px 1px #ffffff",
+                          }}
+                        >
+                          <div className="text-[10px] font-bold uppercase mb-1 opacity-70">
+                            {msg.sender}
+                          </div>
+                          <div className="text-sm leading-tight">{msg.text}</div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                  {/* System is Typing Animation */}
+                  {isTyping && (
+                    <div className="flex justify-start">
+                      <div className="bg-[#c0c0c0] p-2 border-2 border-gray-100 shadow-[2px_2px_0px_rgba(0,0,0,1)] text-xs font-mono">
+                        <span className="opacity-70 uppercase font-bold">
+                          Y2k Banana 🍌
+                        </span>
+                        <div className="flex gap-1 mt-1">
+                          is typing<span className="animate-pulse">.</span>
+                          <span className="animate-pulse [animation-delay:200ms]">
+                            .
+                          </span>
+                          <span className="animate-pulse [animation-delay:400ms]">
+                            .
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+                {/* Input Area */}
+                {/* Step C: The UI (Body)*/}
+                <div className="field-row ">
+                  <input
+                    type="text"
+                    className="w-full min-h-10"
+                    value={inputValue}
+                    onChange={(e) => setInputValue(e.target.value)}
+                    onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
+                  />
+                  <button className="h-10" onClick={handleSendMessage}>
+                    Send
+                  </button>
+                </div>
+              </>
+            ) : (
+              <SnakeGame />
+            )}
           </div>
         </div>
       </main>{" "}
