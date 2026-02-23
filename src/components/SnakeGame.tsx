@@ -66,6 +66,9 @@ export default function SnakeGame() {
   const bgMusicOnRef = useRef(bgMusicOn);
   bgMusicOnRef.current = bgMusicOn;
 
+  const gameAreaRef = useRef<HTMLDivElement>(null);
+  const touchStartRef = useRef<{ x: number; y: number } | null>(null);
+
   const getAudioCtx = useCallback(() => {
     if (!audioCtxRef.current) {
       audioCtxRef.current = new AudioContext();
@@ -250,6 +253,41 @@ export default function SnakeGame() {
   }, [status]);
 
   useEffect(() => {
+    const el = gameAreaRef.current;
+    if (!el) return;
+
+    const SWIPE_THRESHOLD = 20;
+
+    const onTouchStart = (e: TouchEvent) => {
+      const touch = e.touches[0];
+      touchStartRef.current = { x: touch.clientX, y: touch.clientY };
+    };
+
+    const onTouchEnd = (e: TouchEvent) => {
+      if (!touchStartRef.current) return;
+      const touch = e.changedTouches[0];
+      const dx = touch.clientX - touchStartRef.current.x;
+      const dy = touch.clientY - touchStartRef.current.y;
+      touchStartRef.current = null;
+
+      if (Math.abs(dx) < SWIPE_THRESHOLD && Math.abs(dy) < SWIPE_THRESHOLD) return;
+
+      if (Math.abs(dx) > Math.abs(dy)) {
+        updateDirection(dx > 0 ? { x: 1, y: 0 } : { x: -1, y: 0 });
+      } else {
+        updateDirection(dy > 0 ? { x: 0, y: 1 } : { x: 0, y: -1 });
+      }
+    };
+
+    el.addEventListener("touchstart", onTouchStart, { passive: true });
+    el.addEventListener("touchend", onTouchEnd, { passive: true });
+    return () => {
+      el.removeEventListener("touchstart", onTouchStart);
+      el.removeEventListener("touchend", onTouchEnd);
+    };
+  }, []);
+
+  useEffect(() => {
     if (status !== "running") {
       return;
     }
@@ -305,24 +343,47 @@ export default function SnakeGame() {
 
   return (
     <div
-      className="p-3"
-      style={{ border: "2px inset #ffffff", backgroundColor: "#c0c0c0" }}
+      className="p-2 sm:p-3"
+      style={{
+        border: "2px inset #ffffff",
+        backgroundColor: "#c0c0c0",
+        width: "100%",
+        maxWidth: "480px",
+        margin: "0 auto",
+        boxSizing: "border-box",
+      }}
     >
-      <div className="field-row mb-2" style={{ justifyContent: "space-between" }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBottom: "6px",
+          fontSize: "clamp(12px, 3.2vw, 14px)",
+        }}
+      >
         <div>Score: {score}</div>
-        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
           <span>Best: {bestScore}</span>
           <button
             onClick={() => setBgMusicOn((v) => !v)}
             title={bgMusicOn ? "Mute music" : "Unmute music"}
-            style={{ fontSize: "11px", padding: "1px 6px", minWidth: 0 }}
+            style={{ fontSize: "clamp(10px, 2.8vw, 11px)", padding: "1px 6px", minWidth: 0 }}
           >
             {bgMusicOn ? "♪ On" : "♪ Off"}
           </button>
         </div>
       </div>
 
-      <div className="field-row mb-2" style={{ justifyContent: "space-between" }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBottom: "6px",
+          fontSize: "clamp(11px, 3vw, 14px)",
+        }}
+      >
         <div>
           Status:{" "}
           {status === "idle" && "Ready"}
@@ -330,15 +391,16 @@ export default function SnakeGame() {
           {status === "paused" && "Paused"}
           {status === "over" && "Game Over"}
         </div>
-        <div style={{ fontSize: "11px" }}>Use Arrow keys or WASD</div>
+        <div style={{ fontSize: "clamp(9px, 2.5vw, 11px)" }}>Swipe or Arrow keys</div>
       </div>
 
       <div
+        ref={gameAreaRef}
         style={{
           position: "relative",
-          width: "min(92vw, 420px)",
+          width: "100%",
           aspectRatio: "1 / 1",
-          margin: "0 auto",
+          touchAction: "none",
         }}
       >
         <div
@@ -456,28 +518,84 @@ export default function SnakeGame() {
         `}</style>
       </div>
 
-      <div className="field-row mt-3" style={{ justifyContent: "center", gap: "8px" }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          gap: "8px",
+          marginTop: "10px",
+          flexWrap: "wrap",
+        }}
+      >
         {(status === "idle" || status === "over") && (
-          <button onClick={resetGame}>
+          <button
+            onClick={resetGame}
+            style={{ minHeight: "32px", padding: "4px 16px", fontSize: "clamp(12px, 3vw, 14px)" }}
+          >
             {status === "over" ? "Play Again" : "Start Game"}
           </button>
         )}
         {status === "running" && (
-          <button onClick={() => setStatus("paused")}>Pause</button>
+          <button
+            onClick={() => setStatus("paused")}
+            style={{ minHeight: "32px", padding: "4px 16px", fontSize: "clamp(12px, 3vw, 14px)" }}
+          >
+            Pause
+          </button>
         )}
         {status === "paused" && (
-          <button onClick={() => setStatus("running")}>Resume</button>
+          <button
+            onClick={() => setStatus("running")}
+            style={{ minHeight: "32px", padding: "4px 16px", fontSize: "clamp(12px, 3vw, 14px)" }}
+          >
+            Resume
+          </button>
         )}
-        {status !== "idle" && <button onClick={resetGame}>Restart</button>}
+        {status !== "idle" && (
+          <button
+            onClick={resetGame}
+            style={{ minHeight: "32px", padding: "4px 16px", fontSize: "clamp(12px, 3vw, 14px)" }}
+          >
+            Restart
+          </button>
+        )}
       </div>
 
-      <div className="field-row-stacked mt-3" style={{ alignItems: "center", gap: "4px" }}>
-        <button onClick={() => updateDirection({ x: 0, y: -1 })}>Up</button>
-        <div className="field-row" style={{ gap: "4px" }}>
-          <button onClick={() => updateDirection({ x: -1, y: 0 })}>Left</button>
-          <button onClick={() => updateDirection({ x: 1, y: 0 })}>Right</button>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: "4px",
+          marginTop: "10px",
+        }}
+      >
+        <button
+          onClick={() => updateDirection({ x: 0, y: -1 })}
+          style={{ minWidth: "48px", minHeight: "40px", fontSize: "clamp(14px, 4vw, 18px)" }}
+        >
+          ▲
+        </button>
+        <div style={{ display: "flex", gap: "4px" }}>
+          <button
+            onClick={() => updateDirection({ x: -1, y: 0 })}
+            style={{ minWidth: "48px", minHeight: "40px", fontSize: "clamp(14px, 4vw, 18px)" }}
+          >
+            ◀
+          </button>
+          <button
+            onClick={() => updateDirection({ x: 1, y: 0 })}
+            style={{ minWidth: "48px", minHeight: "40px", fontSize: "clamp(14px, 4vw, 18px)" }}
+          >
+            ▶
+          </button>
         </div>
-        <button onClick={() => updateDirection({ x: 0, y: 1 })}>Down</button>
+        <button
+          onClick={() => updateDirection({ x: 0, y: 1 })}
+          style={{ minWidth: "48px", minHeight: "40px", fontSize: "clamp(14px, 4vw, 18px)" }}
+        >
+          ▼
+        </button>
       </div>
     </div>
   );
