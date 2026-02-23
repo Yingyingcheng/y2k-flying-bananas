@@ -581,13 +581,13 @@ export default function SnakeGame() {
             onClick={() => updateDirection({ x: -1, y: 0 })}
             style={{ minWidth: "48px", minHeight: "40px", fontSize: "clamp(14px, 4vw, 18px)" }}
           >
-            ◀
+            ◄
           </button>
           <button
             onClick={() => updateDirection({ x: 1, y: 0 })}
             style={{ minWidth: "48px", minHeight: "40px", fontSize: "clamp(14px, 4vw, 18px)" }}
           >
-            ▶
+            ►
           </button>
         </div>
         <button

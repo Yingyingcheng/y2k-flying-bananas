@@ -260,7 +260,7 @@ export default function Home() {
                     ).play()
                   }
                 >
-                  ▶ Play
+                  ▶︎ Play
                 </button>
                 <button
                   onClick={() =>
@@ -323,7 +323,9 @@ export default function Home() {
                           <div className="text-[10px] font-bold uppercase mb-1 opacity-70">
                             {msg.sender}
                           </div>
-                          <div className="text-sm leading-tight">{msg.text}</div>
+                          <div className="text-sm leading-tight">
+                            {msg.text}
+                          </div>
                         </div>
                       </div>
                     );
