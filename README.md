@@ -14,9 +14,11 @@ A nostalgic Y2K-themed web app featuring an AI chatbot, a 3D spinning retro char
 
 ### Color Themes
 
-| Rosie | Jennie | Jisoo | Lisa |
-|---|---|---|---|
-| ![Rosie](public/RosieTheme.png) | ![Jennie](public/JennieTheme.png) | ![Jisoo](public/JisooTheme.png) | ![Lisa](public/LisaTheme.png) |
+| Rosie                           | Jennie                            |
+| ------------------------------- | --------------------------------- |
+| ![Rosie](public/RosieTheme.png) | ![Jennie](public/JennieTheme.png) |
+| **Jisoo**                       | **Lisa**                          |
+| ![Jisoo](public/JisooTheme.png) | ![Lisa](public/LisaTheme.png)     |
 
 ### Snake Game
 
@@ -24,13 +26,13 @@ A nostalgic Y2K-themed web app featuring an AI chatbot, a 3D spinning retro char
 
 ## Features
 
-- **BananaMessenger.exe** — Chat with "Y2K Banana," an AI-powered chatbot (OpenAI GPT-3.5) that replies in your chosen language
-- **3D Viewport** — A spinning low-poly retro hero rendered with React Three Fiber, inspired by N64 character select screens
-- **Retro Boot Screen** — A fake DOS-style loading sequence before the app launches
-- **Snake Game** — A fully playable Snake mode with 8-bit sound effects, a background melody, swipe support, and local high-score tracking
-- **Music Player** — A built-in NewJeans playlist with play/pause and volume controls
-- **Color Themes** — Five switchable color palettes (Banana, Rosie, Jennie, Jisoo, Lisa)
-- **Multi-Language** — Chat responses in English, Traditional Chinese, Japanese, Spanish, or Korean
+- **BananaMessenger.exe** : Chat with "Y2K Banana," an AI-powered chatbot (OpenAI GPT-3.5) that replies in your chosen language
+- **3D Viewport** : A spinning low-poly retro hero rendered with React Three Fiber, inspired by N64 character select screens
+- **Retro Boot Screen** : A fake DOS-style loading sequence before the app launches
+- **Snake Game** : A fully playable Snake mode with 8-bit sound effects, a background melody, swipe support, and local high-score tracking
+- **Music Player** : A built-in NewJeans playlist with play/pause and volume controls
+- **Color Themes** : Five switchable color palettes (Banana, Rosie, Jennie, Jisoo, Lisa)
+- **Multi-Language** : Chat responses in English, Traditional Chinese, Japanese, Spanish, or Korean
 
 ## Tech Stack
 
