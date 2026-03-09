@@ -1,36 +1,105 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Y2K Flying Bananas
+
+A nostalgic Y2K-themed web app featuring an AI chatbot, a 3D spinning retro character, a built-in music player, and a classic Snake game — all wrapped in a Windows 98 UI.
+
+## Demo
+
+### Boot Screen
+
+![Loading Screen](public/Loading.png)
+
+### Chat — Default (Banana) Theme
+
+![Default Theme](public/DefaultTheme.png)
+
+### Color Themes
+
+| Rosie | Jennie | Jisoo | Lisa |
+|---|---|---|---|
+| ![Rosie](public/RosieTheme.png) | ![Jennie](public/JennieTheme.png) | ![Jisoo](public/JisooTheme.png) | ![Lisa](public/LisaTheme.png) |
+
+### Snake Game
+
+![Snake Game](public/SnakeGame.png)
+
+## Features
+
+- **BananaMessenger.exe** — Chat with "Y2K Banana," an AI-powered chatbot (OpenAI GPT-3.5) that replies in your chosen language
+- **3D Viewport** — A spinning low-poly retro hero rendered with React Three Fiber, inspired by N64 character select screens
+- **Retro Boot Screen** — A fake DOS-style loading sequence before the app launches
+- **Snake Game** — A fully playable Snake mode with 8-bit sound effects, a background melody, swipe support, and local high-score tracking
+- **Music Player** — A built-in NewJeans playlist with play/pause and volume controls
+- **Color Themes** — Five switchable color palettes (Banana, Rosie, Jennie, Jisoo, Lisa)
+- **Multi-Language** — Chat responses in English, Traditional Chinese, Japanese, Spanish, or Korean
+
+## Tech Stack
+
+| Layer     | Technology                                                                                                                                             |
+| --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Framework | [Next.js](https://nextjs.org) 16 (App Router)                                                                                                          |
+| UI        | React 19, [98.css](https://jdan.github.io/98.css/), [Tailwind CSS](https://tailwindcss.com) 4                                                          |
+| 3D        | [Three.js](https://threejs.org) via [@react-three/fiber](https://docs.pmnd.rs/react-three-fiber) & [@react-three/drei](https://github.com/pmndrs/drei) |
+| AI        | [OpenAI](https://platform.openai.com) API (GPT-3.5 Turbo)                                                                                              |
+| Icons     | [Lucide React](https://lucide.dev)                                                                                                                     |
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js 18+
+- An [OpenAI API key](https://platform.openai.com/account/api-keys)
+
+### Setup
+
+1. Clone the repo and install dependencies:
+
+```bash
+git clone https://github.com/Yingyingcheng/y2k-flying-bananas
+cd y2k-flying-bananas
+npm install
+```
+
+2. Create a `.env.local` file in the project root with your OpenAI key:
+
+```
+OPENAI_API_KEY=sk-...
+```
+
+3. Start the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+4. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+src/
+├── app/
+│   ├── api/chat/route.ts   # OpenAI chat API route
+│   ├── layout.tsx           # Root layout
+│   └── page.tsx             # Main page (chat, theme, music, mode switching)
+├── components/
+│   ├── BananaScene.tsx      # 3D scene with retro hero & grid floor
+│   ├── LoadingScreen.tsx    # DOS-style boot animation
+│   └── SnakeGame.tsx        # Snake game with touch & keyboard controls
+public/
+└── music/                   # NewJeans MP3 tracks
+```
 
-## Learn More
+## Scripts
 
-To learn more about Next.js, take a look at the following resources:
+| Command         | Description            |
+| --------------- | ---------------------- |
+| `npm run dev`   | Start dev server       |
+| `npm run build` | Production build       |
+| `npm start`     | Serve production build |
+| `npm run lint`  | Run ESLint             |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## License
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+This project's source code is licensed under the [MIT License](LICENSE).
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+**Note:** The music files in `public/music/` are copyrighted by their respective artists and are not covered by this license.
