@@ -2,7 +2,7 @@
 
 A nostalgic Y2K-themed web app featuring an AI chatbot, a 3D spinning retro character, a built-in music player, and a classic Snake game — all wrapped in a Windows 98 UI.
 
-## Demo
+## Demo : 🔗 [Y2K Flying Bananas](https://y2k-flying-bananas.vercel.app)
 
 ### Boot Screen
 
@@ -14,11 +14,11 @@ A nostalgic Y2K-themed web app featuring an AI chatbot, a 3D spinning retro char
 
 ### Color Themes
 
-| Rosie | Jennie |
-|:---:|:---:|
+|              Rosie              |              Jennie               |
+| :-----------------------------: | :-------------------------------: |
 | ![Rosie](public/RosieTheme.png) | ![Jennie](public/JennieTheme.png) |
-| **Jisoo** | **Lisa** |
-| ![Jisoo](public/JisooTheme.png) | ![Lisa](public/LisaTheme.png) |
+|            **Jisoo**            |             **Lisa**              |
+| ![Jisoo](public/JisooTheme.png) |   ![Lisa](public/LisaTheme.png)   |
 
 ### Snake Game
 
