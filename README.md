@@ -17,7 +17,7 @@ A nostalgic Y2K-themed web app featuring an AI chatbot, a 3D spinning retro char
 | Rosie                           | Jennie                            |
 | ------------------------------- | --------------------------------- |
 | ![Rosie](public/RosieTheme.png) | ![Jennie](public/JennieTheme.png) |
-| **Jisoo**                       | **Lisa**                          |
+| Jisoo                           | Lisa                              |
 | ![Jisoo](public/JisooTheme.png) | ![Lisa](public/LisaTheme.png)     |
 
 ### Snake Game
