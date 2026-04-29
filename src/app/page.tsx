@@ -297,7 +297,7 @@ export default function Home() {
                 {/* Chat History */}
                 <div
                   ref={scrollRef}
-                  className="h-64 overflow-y-auto p-4 bg-amber-200 mb-4 border-inset flex flex-col gap-3"
+                  className="h-64 overflow-y-auto  p-4 bg-amber-200 mb-4 border-inset flex flex-col gap-3"
                   style={{ backgroundColor: currentTheme.chat }}
                 >
                   {messages.map((msg, i) => {
